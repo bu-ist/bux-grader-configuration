@@ -1,0 +1,12 @@
+[program:{{ grader_supervisor_prog }}]
+
+command={{ grader_venv_dir }}/bin/grader --settings={{ grader_settings_module }} --pythonpath={{ grader_code_dir }}
+
+user={{ common_service_user }}
+directory={{ grader_code_dir }}
+
+stdout_logfile={{ grader_log_dir }}/%(program_name)s.out
+stderr_logfile={{ grader_log_dir }}/%(program_name)s.err
+
+killasgroup=true
+stopasgroup=true

@@ -1,0 +1,9 @@
+---
+
+common_service_user: bux-grader
+
+common_app_dir: /edx/app
+common_bin_dir: /edx/bin
+common_cfg_dir: /edx/etc
+common_data_dir: /edx/var
+common_log_dir: /edx/var/log

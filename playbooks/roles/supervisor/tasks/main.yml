@@ -1,0 +1,43 @@
+---
+
+- name: create app directories
+  file: >
+    name="{{ item }}"
+    state=directory
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+  with_items:
+    - "{{ supervisor_app_dir }}"
+    - "{{ supervisor_cfg_dir }}"
+    - "{{ supervisor_venv_dir }}"
+    - "{{ supervisor_data_dir }}"
+    - "{{ supervisor_log_dir }}"
+
+- name: install via pip
+  pip: >
+    name=supervisor
+    virtualenv="{{ supervisor_venv_dir }}"
+    state=present
+  sudo_user: "{{ common_service_user }}"
+
+- name: create supervisord config
+  template: >
+    src=supervisord.conf.j2
+    dest="{{ supervisor_cfg }}"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0644
+  notify: restart supervisor
+
+- name: create upstart job
+  template: >
+    src=supervisor-upstart.conf.j2
+    dest=/etc/init/supervisor.conf
+    owner=root
+    group=root
+
+- name: create supervisorctl symlink
+  file: >
+    src="{{ supervisor_venv_dir }}/bin/supervisorctl"
+    dest="{{ common_bin_dir }}/supervisorctl"
+    state=link

@@ -1,0 +1,96 @@
+---
+
+- name: install grader prereqs
+  apt: >
+    pkg="{{ item }}"
+    state=present
+  with_items: grader_packages
+
+- name: create grader directories
+  file: >
+    path="{{ item }}"
+    state=directory
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=2775
+  with_items:
+    - "{{ grader_app_dir }}"
+    - "{{ grader_data_dir }}"
+    - "{{ grader_log_dir }}"
+
+- name: create supervisor configuration for managing grader services
+  template: >
+    src=grader.supervisor.conf.j2
+    dest="{{ supervisor_cfg_dir }}/{{ grader_supervisor_prog }}.conf"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0644
+  notify: restart supervisor
+
+- name: create ssh script for git (not authenticated)
+  template: >
+    src=git_ssh_noauth.sh.j2
+    dest={{ grader_git_ssh }}
+    owner={{ common_service_user }}
+    group={{ common_service_user }}
+    mode=750
+  when: not GRADER_USE_GIT_IDENTITY
+
+- name: create ssh script for git (authenticated)
+  template: >
+    src=git_ssh_auth.sh.j2
+    dest={{ grader_git_ssh }}
+    owner={{ common_service_user }}
+    group={{ common_service_user }}
+    mode=750
+  when: GRADER_USE_GIT_IDENTITY
+
+- name: install read-only ssh key
+  copy: >
+    src={{ GRADER_LOCAL_GIT_IDENTITY }}
+    dest={{ grader_git_identity }}
+    force=yes
+    owner={{ common_service_user }}
+    group={{ common_service_user }}
+    mode=0600
+  when: GRADER_USE_GIT_IDENTITY
+
+- name: clone the edx grader repository (unauthenticated)
+  git: >
+    dest="{{ grader_code_dir }}"
+    repo="{{ grader_repos }}"
+    version="{{ grader_version }}"
+    accept_hostkey=yes
+  sudo_user: "{{ common_service_user }}"
+  notify: restart grader
+  when: not GRADER_USE_GIT_IDENTITY
+
+- name: clone the edx grader repository (authenticated)
+  git: >
+    dest="{{ grader_code_dir }}"
+    repo="{{ grader_repos }}"
+    version="{{ grader_version }}"
+    accept_hostkey=yes
+    key_file={{ grader_git_identity }}
+  sudo_user: "{{ common_service_user }}"
+  notify: restart grader
+  when: GRADER_USE_GIT_IDENTITY
+
+- name: setup grader virtualenv
+  pip: >
+    requirements="{{ grader_code_dir }}/requirements.txt"
+    virtualenv="{{ grader_venv_dir }}"
+  sudo_user: "{{ common_service_user }}"
+  environment:
+    GIT_SSH: "{{ grader_git_ssh }}"
+  notify: restart grader
+
+- name: create grader configuration files
+  template: >
+    src="{{ item.src }}"
+    dest="{{ item.dest }}"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0640
+  with_items: grader_cfg_templates
+  notify: restart grader

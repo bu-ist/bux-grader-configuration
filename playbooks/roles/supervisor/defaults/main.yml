@@ -1,0 +1,13 @@
+---
+
+supervisor_app_dir: "{{ common_app_dir }}/supervisor"
+supervisor_cfg_dir: "{{ supervisor_app_dir }}/conf.d"
+supervisor_venv_dir: "{{ supervisor_app_dir }}/venv"
+supervisor_log_dir: "{{ common_log_dir }}/supervisor"
+supervisor_data_dir: "{{ common_data_dir }}/supervisor"
+
+supervisor_cfg: "{{ supervisor_app_dir }}/supervisor.conf"
+supervisor_ctl: "{{ supervisor_venv_dir }}/bin/supervisorctl"
+
+supervisor_http_bind_ip: "127.0.0.1"
+supervisor_http_bind_port: "9001"

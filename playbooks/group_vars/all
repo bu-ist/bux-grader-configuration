@@ -1,0 +1,7 @@
+---
+
+#
+# Secrets should live outside of this repository in a secure location
+# Consider using `ansible-vault` for encryption / decryption.
+#
+secure_dir: "path/to/secure/directory"

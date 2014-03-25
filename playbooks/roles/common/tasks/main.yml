@@ -1,0 +1,48 @@
+---
+
+- name: apt-get update
+  apt: >
+    update_cache=yes
+    cache_valid_time=3600
+
+- name: install utils
+  apt: >
+    pkg="{{ item }}"
+    state=present
+  with_items: common_packages
+
+- name: install python and friends
+  apt: >
+    pkg="{{ item }}"
+    state=present
+  with_items:
+    - python
+    - python-dev
+    - python-pip
+    - python-virtualenv
+    - python-pycurl       # Required by apt_repo
+
+- name: install boto for aws interactions
+  pip: >
+    name=boto
+
+- name: create service user
+  user: >
+    name="{{ common_service_user }}"
+    home="{{ common_app_dir }}"
+    createhome=no
+    shell=/bin/false
+
+- name: create directories
+  file: >
+    path="{{ item }}"
+    state=directory
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=2775
+  with_items:
+    - "{{ common_app_dir }}"
+    - "{{ common_bin_dir }}"
+    - "{{ common_cfg_dir }}"
+    - "{{ common_data_dir }}"
+    - "{{ common_log_dir }}"
