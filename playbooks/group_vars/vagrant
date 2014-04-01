@@ -1,8 +1,0 @@
----
-
-grader_repos: https://github.com/your-repository
-grader_version: master
-
-# Private repository?  Setup identity files with the following:
-# GRADER_USE_GIT_IDENTITY: false
-# GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/path/to/git-identity"

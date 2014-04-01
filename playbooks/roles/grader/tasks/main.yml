@@ -85,12 +85,3 @@
     GIT_SSH: "{{ grader_git_ssh }}"
   notify: restart grader
 
-- name: create grader configuration files
-  template: >
-    src="{{ item.src }}"
-    dest="{{ item.dest }}"
-    owner="{{ common_service_user }}"
-    group="{{ common_service_user }}"
-    mode=0640
-  with_items: grader_cfg_templates
-  notify: restart grader

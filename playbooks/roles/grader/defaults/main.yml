@@ -12,15 +12,6 @@ grader_packages: []
 
 grader_supervisor_prog: "bux-{{ grader_name }}"
 
-# Destination for *.auth.json and *.env.json files
-grader_cfg_dir: "{{ grader_app_dir }}"
-grader_cfg_templates:
-  - { src: 'grader.auth.json.j2', dest: '{{ grader_cfg_dir }}/{{ grader_name }}.auth.json' }
-  - { src: 'grader.env.json.j2', dest: '{{ grader_cfg_dir }}/{{ grader_name }}.env.json' }
-
-grader_auth_config: !!null
-grader_env_config: !!null
-
 GRADER_USE_GIT_IDENTITY: false
 # Example: "{{ secure_dir }}/files/git-identity"
 GRADER_LOCAL_GIT_IDENTITY: !!null
