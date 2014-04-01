@@ -41,3 +41,8 @@
     src="{{ supervisor_venv_dir }}/bin/supervisorctl"
     dest="{{ common_bin_dir }}/supervisorctl"
     state=link
+
+- name: start supervisor
+  service: >
+    name=supervisor
+    state=started
