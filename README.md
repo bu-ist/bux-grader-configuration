@@ -18,6 +18,22 @@ $ cd bux-grader-configuration
 $ pip install -r requirements.txt
 ```
 
+## Configuration
+
+The playbook uses roles which depend on the existence of a few variables.
+
+```yml
+grader_repos: https://github.com/your-grader-repository
+grader_version: develop
+grader_settings_module: settings
+```
+
+The ``grader`` role assumes there is a top-level ``requirements.txt`` file in your course repository, which it uses to create a ``virtualenv``.
+
+The ``grader_settings_module`` variable should refer to a settings module that is importable by Python from your repository root.
+
+For example, if your settings module is located in ``settings/production.py``, the ``grader_settings_module`` should be set to ``settings.production``.
+
 ## Setting up a development VM
 
 ### Prerequisites
@@ -49,8 +65,8 @@ venv - /edx/app/grader/venv
 
 ```bash
 # Check grader status
-$ /edx/app/supervisor/venv/bin/supervisorctl status
+$ /edx/bin/supervisorctl status
 
 # Start / stop grader
-$ /edx/app/supervisor/venv/bin/supervisorctl start|stop bux-grader
+$ /edx/bin/supervisorctl start|stop bux-grader
 ```

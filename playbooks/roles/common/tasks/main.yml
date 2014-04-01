@@ -32,6 +32,7 @@
     home="{{ common_app_dir }}"
     createhome=no
     shell=/bin/false
+  when: common_service_user != 'vagrant'
 
 - name: create directories
   file: >

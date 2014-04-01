@@ -13,8 +13,10 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "grader", "/edx/app/grader/grader", :create => true, nfs: true
-  config.vm.synced_folder "venv", "/edx/app/grader/venv", :create => true, nfs: true
+  config.vm.synced_folder "grader", "/edx/app/grader/grader", :create => true,
+                          :owner=> "vagrant", :group=>"vagrant", :mount_options => ["dmode=2775"]
+  config.vm.synced_folder "venv", "/edx/app/grader/venv", :create => true,
+                          :owner=> "vagrant", :group=>"vagrant", :mount_options => ["dmode=2775"]
 
   #
   # See http://docs.vagrantup.com/v2/provisioning/ansible.html
@@ -28,10 +30,10 @@ Vagrant.configure("2") do |config|
     ansible.verbose = "v"
 
     # Consider using `ansible vault` to encrypt sensitive config vars files
-    # ansible.raw_arguments = ['--ask-vault-pass']
+    # ansible.raw_arguments = ["--ask-vault-pass"]
 
     # Dry run
-    # ansible.raw_arguments = ['--check']
+    # ansible.raw_arguments = ["--check"]
 
   end
 

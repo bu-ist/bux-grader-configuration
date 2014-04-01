@@ -1,0 +1,17 @@
+---
+
+#
+# Secrets should live outside of this repository in a secure location
+# Consider using `ansible-vault` for encryption / decryption.
+#
+secure_dir: path/to/secure/dir
+
+# TODO: Remove when this repository and the grader framework are public
+GRADER_USE_GIT_IDENTITY: true
+GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/files/bux-grader-git-identity"
+
+common_service_user: vagrant
+
+grader_repos: git@github.com:bu-ist/bux-demo-course-grader
+grader_version: develop
+grader_settings_module: settings
