@@ -15,6 +15,7 @@
     mode=2775
   with_items:
     - "{{ grader_app_dir }}"
+    - "{{ grader_cfg_dir }}"
     - "{{ grader_data_dir }}"
     - "{{ grader_log_dir }}"
 

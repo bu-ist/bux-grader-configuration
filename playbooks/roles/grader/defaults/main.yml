@@ -7,6 +7,7 @@ grader_venv_dir: "{{ grader_app_dir }}/venv"
 grader_code_dir: "{{ grader_app_dir }}/{{ grader_name }}"
 grader_data_dir: "{{ common_data_dir }}/{{ grader_name }}"
 grader_log_dir: "{{ common_log_dir }}/{{ grader_name }}"
+grader_cfg_dir: "{{ common_cfg_dir }}/{{ grader_name }}"
 
 grader_packages: []
 

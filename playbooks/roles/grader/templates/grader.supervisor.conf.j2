@@ -2,6 +2,8 @@
 
 command={{ grader_venv_dir }}/bin/grader --settings={{ grader_settings_module }}
 
+environment=GRADER_CONFIG_DIR={{ grader_cfg_dir }}
+
 user={{ common_service_user }}
 directory={{ grader_code_dir }}
 
