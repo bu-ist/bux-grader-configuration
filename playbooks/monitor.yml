@@ -1,0 +1,11 @@
+---
+
+- name: Provision the BU edX external grader monitoring environment
+  hosts: all
+  sudo: True
+
+  roles:
+    - common
+    - supervisor
+    - graphite
+    - statsd
