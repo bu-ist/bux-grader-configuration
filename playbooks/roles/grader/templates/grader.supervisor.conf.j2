@@ -7,8 +7,20 @@ environment=GRADER_CONFIG_DIR={{ grader_cfg_dir }}
 user={{ common_service_user }}
 directory={{ grader_code_dir }}
 
-stdout_logfile={{ grader_log_dir }}/%(program_name)s.out
-stderr_logfile={{ grader_log_dir }}/%(program_name)s.err
+# Combines stdout / stderr in to one log file
+redirect_stderr=true
+stdout_logfile={{ grader_log_dir }}/%(program_name)s.log
+
+# Log file management
+# stdout_logfile_maxbytes=50MB
+# stdout_logfile_backups=10
+
+# Restart behavior
+# Only attempt to restart with unexpected exits
+autorestart=unexpected
+
+# Ensure program stays running for 10 seconds before considering it as STARTED
+startsecs=10
 
 killasgroup=true
 stopasgroup=true
