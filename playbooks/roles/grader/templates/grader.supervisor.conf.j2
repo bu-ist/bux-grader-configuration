@@ -2,7 +2,7 @@
 
 command={{ grader_venv_dir }}/bin/grader --settings={{ grader_settings_module }}
 
-environment=GRADER_CONFIG_DIR={{ grader_cfg_dir }}
+environment=GRADER_CONFIG_DIR={{ grader_cfg_dir }},STATSD_PORT={{ grader_statsd_port }},STATSD_HOST={{ grader_statsd_host }}
 
 user={{ common_service_user }}
 directory={{ grader_code_dir }}

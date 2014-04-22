@@ -1,0 +1,11 @@
+[program:{{ statsd_supervisor_prog }}]
+
+command=/usr/bin/node {{ statsd_app_dir }}/stats.js {{ statsd_config_file }}
+
+user={{ common_service_user }}
+directory={{ statsd_app_dir }}
+
+stdout_logfile={{ statsd_log_dir }}/%(program_name)s.log
+stderr_logfile={{ statsd_log_dir }}/%(program_name)s.err
+
+autorestart=unexpected

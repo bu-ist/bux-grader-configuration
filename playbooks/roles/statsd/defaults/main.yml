@@ -1,0 +1,26 @@
+---
+
+nodejs_apt_repository: "ppa:chris-lea/node.js"
+nodejs_apt_package: "nodejs"
+
+statsd_repos: "git://github.com/etsy/statsd.git"
+statsd_version: master
+
+statsd_app_dir: "/opt/statsd"
+statsd_cfg_dir: "{{ common_cfg_dir }}/statsd"
+statsd_log_dir: "{{ common_log_dir }}/statsd"
+
+statsd_config_file: "{{ statsd_cfg_dir }}/config.js"
+
+statsd_supervisor_prog: "statsd"
+
+statsd_graphite_host: 127.0.0.1
+statsd_graphite_port: 2003
+
+statsd_config:
+  address: 0.0.0.0
+  port: 8125
+  debug: true
+  backends: ["./backends/graphite"]
+  graphiteHost: "{{ statsd_graphite_host }}"
+  graphitePort: "{{ statsd_graphite_port }}"

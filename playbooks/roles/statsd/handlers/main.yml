@@ -1,0 +1,8 @@
+---
+
+- name: restart statsd
+  supervisorctl: >
+    name={{ statsd_supervisor_prog }}
+    supervisorctl_path={{ supervisor_ctl }}
+    config={{ supervisor_cfg }}
+    state=restarted

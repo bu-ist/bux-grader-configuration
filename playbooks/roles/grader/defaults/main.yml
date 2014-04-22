@@ -19,3 +19,6 @@ GRADER_LOCAL_GIT_IDENTITY: !!null
 
 grader_git_identity: "{{ grader_app_dir }}/{{ GRADER_LOCAL_GIT_IDENTITY|basename }}"
 grader_git_ssh: "/tmp/grader_git_ssh.sh"
+
+grader_statsd_host: 127.0.0.1
+grader_statsd_port: 8125
