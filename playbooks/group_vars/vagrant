@@ -15,3 +15,6 @@ common_service_user: vagrant
 grader_repos: git@github.com:bu-ist/bux-demo-course-grader
 grader_version: develop
 grader_settings_module: settings
+
+collectd_graphite_host: 127.0.0.1
+collectd_graphite_port: 2003

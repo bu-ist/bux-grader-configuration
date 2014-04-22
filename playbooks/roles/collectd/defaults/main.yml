@@ -1,0 +1,9 @@
+---
+
+collectd_url: http://collectd.org/files/collectd-5.4.1.tar.bz2
+collectd_sha256: 75452129f271cb0aad28e57f12a49070618bbb7b6a9d64cf869e8766fa2f66e0
+collectd_dir: /opt/collectd
+
+collectd_graphite_prefix: collectd.
+collectd_graphite_host: 127.0.0.1
+collectd_graphite_port: 2003

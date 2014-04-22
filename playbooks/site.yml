@@ -7,5 +7,6 @@
   roles:
     - common
     - supervisor
+    - collectd
     - rabbitmq
     - grader

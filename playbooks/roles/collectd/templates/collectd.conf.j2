@@ -1,0 +1,90 @@
+#
+# Config file for collectd(1).
+# Please read collectd.conf(5) for a list of options.
+# http://collectd.org/
+#
+
+##############################################################################
+# Global                                                                     #
+#----------------------------------------------------------------------------#
+# Global settings for the daemon.                                            #
+##############################################################################
+
+#Hostname    "localhost"
+#FQDNLookup   true
+#BaseDir     "${prefix}/var/lib/collectd"
+#PIDFile     "${prefix}/var/run/collectd.pid"
+#PluginDir   "${exec_prefix}/lib/collectd"
+#TypesDB     "/opt/collectd/share/collectd/types.db"
+
+#----------------------------------------------------------------------------#
+# When enabled, plugins are loaded automatically with the default options    #
+# when an appropriate <Plugin ...> block is encountered.                     #
+# Disabled by default.                                                       #
+#----------------------------------------------------------------------------#
+#AutoLoadPlugin false
+
+#----------------------------------------------------------------------------#
+# Interval at which to query values. This may be overwritten on a per-plugin #
+# base by using the 'Interval' option of the LoadPlugin block:               #
+#   <LoadPlugin foo>                                                         #
+#       Interval 60                                                          #
+#   </LoadPlugin>                                                            #
+#----------------------------------------------------------------------------#
+#Interval     10
+
+#Timeout      2
+#ReadThreads  5
+#WriteThreads 5
+
+# Limit the size of the write queue. Default is no limit. Setting up a limit is
+# recommended for servers handling a high volume of traffic.
+#WriteQueueLimitHigh 1000000
+#WriteQueueLimitLow   800000
+
+##############################################################################
+# Logging                                                                    #
+#----------------------------------------------------------------------------#
+# Plugins which provide logging functions should be loaded first, so log     #
+# messages generated when loading or configuring other plugins can be        #
+# accessed.                                                                  #
+##############################################################################
+
+LoadPlugin syslog
+
+##############################################################################
+# LoadPlugin section                                                         #
+#----------------------------------------------------------------------------#
+# Lines beginning with a single `#' belong to plugins which have been built  #
+# but are disabled by default.                                               #
+#                                                                            #
+# Lines begnning with `##' belong to plugins which have not been built due   #
+# to missing dependencies or because they have been deactivated explicitly.  #
+##############################################################################
+
+LoadPlugin cpu
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin write_graphite
+
+##############################################################################
+# Plugin configuration                                                       #
+#----------------------------------------------------------------------------#
+# In this section configuration stubs for each plugin are provided. A desc-  #
+# ription of those options is available in the collectd.conf(5) manual page. #
+##############################################################################
+
+<Plugin write_graphite>
+  <Node "{{ ansible_hostname }}">
+    Host "{{ collectd_graphite_host }}"
+    Port "{{ collectd_graphite_port }}"
+    Protocol "tcp"
+    LogSendErrors true
+    Prefix "{{ collectd_graphite_prefix }}"
+    # Postfix "collectd"
+    StoreRates true
+    AlwaysAppendDS false
+    EscapeCharacter "_"
+  </Node>
+</Plugin>
