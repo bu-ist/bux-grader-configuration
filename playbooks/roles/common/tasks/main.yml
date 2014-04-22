@@ -34,6 +34,14 @@
     shell=/bin/false
   when: common_service_user != 'vagrant'
 
+- name: create common user .ssh directory
+  file: >
+    state=directory
+    path="{{ common_app_dir }}/.ssh"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0700
+
 - name: create directories
   file: >
     path="{{ item }}"
