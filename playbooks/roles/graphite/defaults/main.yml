@@ -1,0 +1,36 @@
+---
+
+graphite_app_dir: "/opt/graphite"
+graphite_venv_dir: "{{ graphite_app_dir }}/venv"
+graphite_log_dir: "{{ common_log_dir }}/graphite"
+
+# Created by `pip install`
+graphite_web_dir: "{{ graphite_app_dir }}/webapp"
+graphite_bin_dir: "{{ graphite_app_dir }}/bin"
+graphite_lib_dir: "{{ graphite_app_dir }}/lib"
+graphite_cfg_dir: "{{ graphite_app_dir }}/conf"
+
+graphite_apt_packages:
+  - libcairo2
+  - libcairo2-dev
+  - memcached
+  - pkg-config
+  - python
+  - python-cairo
+  - python-dev
+  - python-pip
+  - sqlite3
+
+graphite_supervisor_prog: 'graphite-web'
+carbon_supervisor_prog: 'graphite-carbon'
+
+# Change this in your vars file!
+graphite_secret_key: 'UNSAFEDEFAULT'
+
+# Graphite web
+graphite_bind_host: 0.0.0.0
+graphite_port: 8080
+
+# Carbon bind address and port
+carbon_receiver_interface: 0.0.0.0
+carbon_receiver_port: 2003

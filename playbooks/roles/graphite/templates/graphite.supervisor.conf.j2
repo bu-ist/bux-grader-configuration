@@ -1,0 +1,20 @@
+[program:{{ graphite_supervisor_prog }}]
+
+command={{ graphite_venv_dir }}/bin/gunicorn -w 2 -b {{ graphite_bind_host }}:{{ graphite_port}} --pythonpath {{ graphite_lib_dir }} graphite.wsgi
+
+user={{ common_service_user }}
+directory={{ graphite_web_dir }}
+
+stdout_logfile={{ graphite_log_dir }}/%(program_name)s.log
+stderr_logfile={{ graphite_log_dir }}/%(program_name)s.err
+
+[program:{{ carbon_supervisor_prog }}]
+
+command={{ graphite_bin_dir }}/carbon-cache.py --debug start
+env=PYTHONPATH={{ graphite_lib_dir }}
+
+user={{ common_service_user }}
+directory={{ graphite_app_dir }}
+
+stdout_logfile={{ graphite_log_dir }}/%(program_name)s.log
+stderr_logfile={{ graphite_log_dir }}/%(program_name)s.err

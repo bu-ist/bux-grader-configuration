@@ -1,0 +1,77 @@
+---
+
+- name: install graphite packages
+  apt: >
+    pkg="{{ item }}"
+    state=present
+  with_items: graphite_apt_packages
+
+- name: create graphite directories
+  file: >
+    path="{{ item }}"
+    state=directory
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=2775
+  with_items:
+    - "{{ graphite_app_dir }}"
+    - "{{ graphite_log_dir }}"
+
+- name: install graphite requirements
+  copy: >
+    src="requirements.txt"
+    dest="{{ graphite_app_dir }}/requirements.txt"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0644
+
+- name: setup graphite virtualenv
+  pip: >
+    requirements="{{ graphite_app_dir }}/requirements.txt"
+    virtualenv="{{ graphite_venv_dir }}"
+    virtualenv_site_packages=yes
+  sudo_user: "{{ common_service_user }}"
+  with_items: graphite_pip_packages
+  notify: restart graphite
+
+- name: create carbon configuration files
+  template: >
+    src="{{ item.src }}"
+    dest="{{ graphite_cfg_dir }}/{{ item.dest }}"
+    mode=0644
+  sudo_user: "{{ common_service_user }}"
+  with_items:
+    - {src: "carbon.conf.j2", dest: "carbon.conf"}
+    - {src: "storage-schemas.conf.j2", dest: "storage-schemas.conf"}
+  notify: restart statsd
+
+- name: create graphite configuration file
+  template: >
+    src="local_settings.py.j2"
+    dest="{{ graphite_web_dir }}/graphite/local_settings.py"
+    mode=0644
+  sudo_user: "{{ common_service_user }}"
+
+- name: install graphite WSGI file
+  copy: >
+    src="wsgi.py"
+    dest="{{ graphite_web_dir }}/graphite/wsgi.py"
+    mode=0644
+  sudo_user: "{{ common_service_user }}"
+
+- name: create database
+  django_manage: >
+      command=syncdb
+      app_path={{ graphite_web_dir }}/graphite
+      settings=settings
+      virtualenv={{ graphite_venv_dir }}
+  sudo_user: "{{ common_service_user }}"
+
+- name: create graphite supervisor configuration
+  template: >
+    src=graphite.supervisor.conf.j2
+    dest="{{ supervisor_cfg_dir }}/graphite.conf"
+    owner="{{ common_service_user }}"
+    group="{{ common_service_user }}"
+    mode=0644
+  notify: restart supervisor

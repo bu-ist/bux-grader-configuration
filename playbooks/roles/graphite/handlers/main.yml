@@ -1,0 +1,15 @@
+---
+
+- name: restart graphite
+  supervisorctl: >
+    name={{ graphite_supervisor_prog }}
+    supervisorctl_path={{ supervisor_ctl }}
+    config={{ supervisor_cfg }}
+    state=restarted
+
+- name: restart carbon
+  supervisorctl: >
+    name={{ carbon_supervisor_prog }}
+    supervisorctl_path={{ supervisor_ctl }}
+    config={{ supervisor_cfg }}
+    state=restarted
