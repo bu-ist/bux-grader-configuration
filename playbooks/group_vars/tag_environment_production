@@ -1,5 +1,7 @@
 ---
 
+grader_environment: production
+
 # Example EC2 instance configuration for "production" environment.
 # Utilized by the `create_grader.yml` / `retire_grader.yml` playbooks.
 ec2:

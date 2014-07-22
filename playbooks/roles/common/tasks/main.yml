@@ -64,14 +64,6 @@
     - .ssh
     - .aws
 
-- name: install awscli config
-  template: >
-    src=aws.config.j2
-    dest="{{ common_adm_home }}/.aws/config"
-    owner="{{ common_adm_user }}"
-    group="{{ common_adm_user }}"
-    mode=0600
-
 - name: create directories
   file: >
     path="{{ item }}"
@@ -113,7 +105,17 @@
   shell: echo 0 | sudo tee /proc/sys/vm/swappiness
   when: ansible_swaptotal_mb < 1 and common_swap_size
 
-# S3 sync cron job
+# AWS S3 sync
+
+- name: install awscli config
+  template: >
+    src=aws.config.j2
+    dest="{{ common_adm_home }}/.aws/config"
+    owner="{{ common_adm_user }}"
+    group="{{ common_adm_user }}"
+    mode=0600
+  when: common_aws_access_key_id and common_aws_secret_access_key
+  register: awscli
 
 - name: install s3 sync script
   template: >
@@ -122,17 +124,17 @@
     owner="{{ common_adm_user }}"
     group="{{ common_adm_user }}"
     mode=0750
-  when: s3_sync_dirs | length > 0
+  when: awscli|success and grader_s3_sync_bucket and s3_sync_dirs | length > 0
   tags: s3_sync
 
 - name: setup s3 sync cron job
   cron: >
-    name="grader s3 log rotation"
+    name="bux grader s3 sync"
     hour="6"
     minute="45"
     job="{{ common_cfg_dir }}/s3_sync.sh >> {{ common_log_dir }}/cron_s3_sync.log 2>&1"
     user="{{ common_adm_user }}"
     state=present
-  when: s3_sync_dirs | length > 0
+  when: awscli|success and grader_s3_sync_bucket and s3_sync_dirs | length > 0
   tags: s3_sync
 

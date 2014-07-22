@@ -6,10 +6,6 @@ common_service_user: vagrant
 # Adds 1G of swap space
 common_swap_size: {bs: 1M, count: 1024}
 
-# Common user AWS credentials for S3 log syncing
-common_aws_access_key_id: "enter-aws-access-key-here"
-common_aws_secret_access_key: "enter-aws-secret-key-here"
-
 # Main grader course configuration repository
 grader_repos: git@github.com:bu-ist/bux-demo-course-grader
 grader_version: develop
@@ -23,9 +19,14 @@ grader_settings_module: settings
 grader_packages: []
 grader_pip_packages: []
 
+grader_environment: vagrant
+
+# Common user AWS credentials for S3 log syncing (optional)
+# common_aws_access_key_id: "enter-aws-access-key-here"
+# common_aws_secret_access_key: "enter-aws-secret-key-here"
+
 # Sync log directories to S3 bucket
-grader_log_environment: vagrant
-grader_s3_log_bucket: your-s3-log-bucket-name
+grader_s3_sync_bucket: demo-course-logs
 s3_sync_dirs: ['/edx/var/log/grader', '/edx/var/log/graphite', '/edx/var/log/statsd']
 
 # Vagrant provisoning includes a local Graphite / Statsd install
@@ -33,6 +34,7 @@ s3_sync_dirs: ['/edx/var/log/grader', '/edx/var/log/graphite', '/edx/var/log/sta
 grader_statsd_host: "127.0.0.1"
 grader_statsd_port: 8125
 
+# Collectd / statsd role configuration
 collectd_graphite_host: "127.0.0.1"
 collectd_graphite_port: 2003
 

@@ -19,5 +19,10 @@ common_log_dir: /edx/var/log
 
 common_swap_size: !!null
 
-# Add directories to sync to S3 (for, say, log syncing)
+# Required for S3 sync jobs
+common_aws_access_key_id: !!null
+common_aws_secret_access_key: !!null
+
+# Add directories to sync to S3 (for, say, log archival)
+grader_s3_sync_bucket: !!null
 s3_sync_dirs: []
