@@ -1,25 +1,22 @@
 ---
 
+## Common configuration ##
+
 # Use default "vagrant" user for VM envs.
 common_service_user: vagrant
 
 # Adds 1G of swap space
 common_swap_size: {bs: 1M, count: 1024}
 
-# Main grader course configuration repository
-grader_repos: git@github.com:bu-ist/bux-demo-course-grader
+## Grader configuration ##
+
+# Install the "develop" branch in our vagrant VM
 grader_version: develop
-grader_settings_module: settings
 
-# Example: Loads SSH identity for private Git repository access
-# GRADER_USE_GIT_IDENTITY: true
-# GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/files/keys/github-private-key"
-
-# Grader dependencies
-grader_packages: []
-grader_pip_packages: []
-
+# Used to build S3 sync paths
 grader_environment: vagrant
+
+## AWS S3 Sync ##
 
 # Common user AWS credentials for S3 log syncing (optional)
 # common_aws_access_key_id: "enter-aws-access-key-here"
@@ -28,6 +25,8 @@ grader_environment: vagrant
 # Sync log directories to S3 bucket
 grader_s3_sync_bucket: demo-course-logs
 s3_sync_dirs: ['/edx/var/log/grader', '/edx/var/log/graphite', '/edx/var/log/statsd']
+
+## Monitoring Configuration ##
 
 # Vagrant provisoning includes a local Graphite / Statsd install
 # For real deployments use the `monitor.yml` playbook to deploy to separate instance.

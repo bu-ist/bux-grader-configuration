@@ -15,3 +15,11 @@ secure_dir: "path/to/secure/dir"
 grader_repos: git@github.com:bu-ist/bux-demo-course-grader
 grader_version: master
 grader_settings_module: settings
+
+# Example: Loads SSH identity for private Git repository access
+# GRADER_USE_GIT_IDENTITY: true
+# GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/files/keys/github-private-key"
+
+# Grader dependencies
+grader_packages: ['libxml2-dev', 'libxslt-dev']
+grader_pip_packages: []
