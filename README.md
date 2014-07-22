@@ -1,7 +1,6 @@
+# BUx Grader Configuration
 
-# edX External Grader Configuration
-
-Bootstrapping of external "pull" graders for your [edX](https://www.edx.org/) course.
+Bootstrapping of BUx external grader environments for use with the [BUx Grader Framework](https://github.com/bu-ist/bux-grader-framework).
 
 Provisioning is accomplished using [Ansible](http://www.ansible.com/home).
 
@@ -28,7 +27,7 @@ grader_version: develop
 grader_settings_module: settings
 ```
 
-The ``grader`` role assumes there is a top-level ``requirements.txt`` file in your course repository, which it uses to create a ``virtualenv``.
+The ``grader`` role will look for a top-level ``requirements.txt`` file in your course repository, which it will use to populate a ``virtualenv`` if found.
 
 The ``grader_settings_module`` variable should refer to a settings module that is importable by Python from your repository root.
 
@@ -39,6 +38,8 @@ For example, if your settings module is located in ``settings/production.py``, t
 ### Prerequisites
 1. VirtualBox (https://www.virtualbox.org/)
 2. Vagrant (http://www.vagrantup.com)
+3. vagrant-vbguest plugin (https://github.com/dotless-de/vagrant-vbguest) (Optional)
+4. vagrant-hostupdater plugin (https://github.com/cogitatio/vagrant-hostsupdater) (Optional)
 
 ### Setup
 1. Add your grader-specific configuration vars to `playbooks/group_vars/vagrant`
@@ -50,16 +51,16 @@ Once it's completed, the grader should be up and polling xqueue inside the VM.
 
 ### Shared Folders
 
-The VM will mount two shared folders for your development convenienence:
+The VM will mount two shared folders for your development convenience:
 
-grader - /edx/app/grader/grader
-venv - /edx/app/grader/venv
+* grader - /edx/app/grader/grader
+* venv - /edx/app/grader/venv
 
 ## Provisioning a Remote Server with Ansible
 
 1. Add an inventory file to `playbooks/inventory` describing the remote system to be provisioned
 2. Add your grader-specific configuration (see `playbooks/group_vars/all` for examples)
-3. Provision with `ansible-playbook -i inventory/file site.yml
+3. Provision with `ansible-playbook -i inventory/file grader.yml`
 
 ## Managing the Grader
 
