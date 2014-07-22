@@ -1,0 +1,62 @@
+---
+
+- name: Provisions a new grader EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  # Override this when running the playbook, e.g. `ansible-playbook create_grader.yml -e "env=production"
+  vars:
+    env: sandbox
+
+  # EC2 instance configuration lives in the group_vars file for the specified environment.
+  vars_files:
+    - "group_vars/tag_environment_{{ env }}"
+
+  tasks:
+
+    - name: create new EC2 instance
+      ec2:
+        region: "{{ ec2.region }}"
+        instance_type: "{{ ec2.instance_type }}"
+        image: "{{ ec2.ami }}"
+        key_name: "{{ ec2.key_name }}"
+        group: "{{ ec2.security_groups }}"
+        instance_tags: "{{ ec2.tags }}"
+        count: "{{ ec2.count }}"
+        wait: yes
+        state: present
+      register: created
+
+    - name: add new instance to host group
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: green
+      with_items: created.instances
+
+    - name: wait for SSH
+      wait_for:
+        host: "{{ item.public_dns_name }}"
+        port: 22
+        delay: 60
+        timeout: 320
+        state: started
+      with_items: created.instances
+
+- name: Upgrade instance(s)
+  hosts: green
+  user: ubuntu
+  sudo: True
+  gather_facts: True
+
+  tasks:
+
+    - name: upgrade to the latest security releases
+      apt:
+        upgrade: safe
+        update_cache: yes
+        default_release: "{{ ansible_distribution_release }}-security"
+      register: upgrade_results
+
+    - name: reboot instance
+      command: /sbin/reboot

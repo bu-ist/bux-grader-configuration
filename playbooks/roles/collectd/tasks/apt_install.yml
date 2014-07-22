@@ -1,0 +1,19 @@
+---
+
+- name: install collectd dependencies
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - collectd
+
+- name: setup collectd configuration
+  template: >
+    src=collectd.conf.j2
+    dest=/etc/collectd/collectd.conf
+    owner=root
+    group=root
+    mode=0640
+  notify: restart collectd
+

@@ -1,9 +1,23 @@
 ---
 
 common_service_user: bux-grader
+common_service_home: "/home/{{ common_service_user }}"
+
+common_adm_user: bux-grader-adm
+common_adm_home: "/home/{{ common_adm_user }}"
+common_adm_groups: ["{{ common_service_user }}", "adm"]
 
 common_app_dir: /edx/app
 common_bin_dir: /edx/bin
 common_cfg_dir: /edx/etc
 common_data_dir: /edx/var
 common_log_dir: /edx/var/log
+
+# You can add swap as needed by setting this var.
+# For example, to add 1G of swap space to /swapfile:
+# common_swap_size: {bs: 1M, count: 1024}
+
+common_swap_size: !!null
+
+# Add directories to sync to S3 (for, say, log syncing)
+s3_sync_dirs: []

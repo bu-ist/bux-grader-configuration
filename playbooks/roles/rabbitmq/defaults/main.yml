@@ -8,3 +8,5 @@ rabbitmq_plugins:
   - rabbitmq_management
 
 rabbitmq_config_dir: "/etc/rabbitmq"
+
+rabbitmq_users: []

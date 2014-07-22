@@ -3,10 +3,11 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "precise64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = "trusty64"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
   config.vm.network :private_network, ip: "192.168.33.50"
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.hostname = "bux-grader.local"
 
   # Share an additional folder to the guest VM. The first argument is
@@ -18,16 +19,24 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "venv", "/edx/app/grader/venv", :create => true,
                           :owner=> "vagrant", :group=>"vagrant", :mount_options => ["dmode=2775"]
 
+  # Bump instance memory (pip installs started failing due to memory allocation errors with trusty)
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
   #
   # See http://docs.vagrantup.com/v2/provisioning/ansible.html
   #
   config.vm.provision :ansible do |ansible|
 
-    ansible.playbook = "playbooks/site.yml"
+    ansible.playbook = "playbooks/grader_vagrant.yml"
     ansible.inventory_path = "playbooks/inventory/vagrant"
 
     # A little extra info during playbook runs
     ansible.verbose = "v"
+
+    # Limit plays to specific tags
+    # ansible.tags = ["foo"]
 
     # Consider using `ansible vault` to encrypt sensitive config vars files
     # ansible.raw_arguments = ["--ask-vault-pass"]

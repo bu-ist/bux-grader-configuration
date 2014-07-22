@@ -1,7 +1,17 @@
 ---
 
 #
-# Secrets should live outside of this repository in a secure location
-# Consider using `ansible-vault` for encryption / decryption.
+# This path is used in playbooks to import variable files containing
+# configuration secrets that should not be stored publicly, e.g.:
 #
-secure_dir: "path/to/secure/directory"
+# vars_files:
+#   - {{ secure_dir }}/{{ tag_role_environment }}/vars.yml
+#
+# Consider using `ansible-vault` to encrypt these files.
+#
+secure_dir: "path/to/secure/dir"
+
+# Main grader course configuration repository
+grader_repos: git@github.com:bu-ist/bux-demo-course-grader
+grader_version: master
+grader_settings_module: settings

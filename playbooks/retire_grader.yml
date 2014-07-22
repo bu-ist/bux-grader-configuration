@@ -1,0 +1,21 @@
+---
+
+- name: Sunlight grader EC2 instance(s) from active duty.  Instances should be tagged with a "stage" of "red" before running.
+  hosts: tag_stage_red
+  gather_facts: True
+  sudo: True
+  user: ubuntu
+
+  # A bit hacky ... manually loading role default vars and a few others for things we need in this play.
+  vars_files:
+    - "group_vars/tag_environment_{{ ec2_tag_environment }}"
+
+  tasks:
+
+    - name: terminate the EC2 instance
+      sudo: False
+      local_action:
+        module: ec2
+        region: "{{ ec2.region }}"
+        instance_ids: "{{ hostvars[inventory_hostname].ec2_id }}"
+        state: absent

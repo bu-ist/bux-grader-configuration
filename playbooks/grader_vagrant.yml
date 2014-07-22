@@ -1,0 +1,17 @@
+---
+
+- name: Provisions the BUx grader instance in a local VM
+  hosts: all
+  sudo: True
+
+  vars_files:
+    - "{{ secure_dir }}/vagrant/vars.yml"
+
+  roles:
+    - common
+    - supervisor
+    - collectd
+    - graphite
+    - statsd
+    - rabbitmq
+    - grader

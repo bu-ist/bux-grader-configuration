@@ -1,0 +1,22 @@
+{{ grader_log_dir }}/*.log {
+
+        # Rotate logs daily
+        daily
+
+        # Copy old file and then truncate (as opposed to mv'ing and creating a new one with `create`)
+        copytruncate
+
+        # Don't stop if a log file is missing, don't rotate empty log files
+        missingok
+        notifempty
+
+        # Append the date to the log file
+        dateext
+
+        # Keep seven days worth of log files around
+        rotate 7
+
+        # Compress rotated log files
+        compress
+
+}

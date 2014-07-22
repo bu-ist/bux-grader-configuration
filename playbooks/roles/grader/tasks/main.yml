@@ -36,6 +36,7 @@
     group={{ common_service_user }}
     mode=750
   when: not GRADER_USE_GIT_IDENTITY
+  tags: deploy
 
 - name: create ssh script for git (authenticated)
   template: >
@@ -45,6 +46,7 @@
     group={{ common_service_user }}
     mode=750
   when: GRADER_USE_GIT_IDENTITY
+  tags: deploy
 
 - name: install read-only ssh key
   copy: >
@@ -55,6 +57,7 @@
     group={{ common_service_user }}
     mode=0600
   when: GRADER_USE_GIT_IDENTITY
+  tags: deploy
 
 - name: clone the edx grader repository (unauthenticated)
   git: >
@@ -65,6 +68,7 @@
   sudo_user: "{{ common_service_user }}"
   notify: restart grader
   when: not GRADER_USE_GIT_IDENTITY
+  tags: deploy
 
 - name: clone the edx grader repository (authenticated)
   git: >
@@ -76,6 +80,7 @@
   sudo_user: "{{ common_service_user }}"
   notify: restart grader
   when: GRADER_USE_GIT_IDENTITY
+  tags: deploy
 
 - name: setup grader virtualenv
   pip: >
@@ -85,4 +90,25 @@
   environment:
     GIT_SSH: "{{ grader_git_ssh }}"
   notify: restart grader
+  tags: deploy
+
+- name: install extra grader dependencies with pip
+  pip: >
+    name="{{ item }}"
+    virtualenv="{{ grader_venv_dir }}"
+    extra_args="--ignore-installed"
+  sudo_user: "{{ common_service_user }}"
+  environment:
+    GIT_SSH: "{{ grader_git_ssh }}"
+  with_items: grader_pip_packages
+  notify: restart grader
+  tags: deploy
+
+- name: install log rotation configurations
+  template: >
+    src=logrotate.j2
+    dest="/etc/logrotate.d/{{ grader_supervisor_prog }}"
+    owner=root
+    group=root
+    mode=0644
 

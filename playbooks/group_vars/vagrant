@@ -1,23 +1,41 @@
 ---
 
-#
-# Secrets should live outside of this repository in a secure location
-# Consider using `ansible-vault` for encryption / decryption.
-#
-secure_dir: path/to/secure/dir
-
-# TODO: Remove when this repository and the grader framework are public
-GRADER_USE_GIT_IDENTITY: true
-GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/files/bux-grader-git-identity"
-
+# Use default "vagrant" user for VM envs.
 common_service_user: vagrant
 
+# Adds 1G of swap space
+common_swap_size: {bs: 1M, count: 1024}
+
+# Common user AWS credentials for S3 log syncing
+common_aws_access_key_id: "enter-aws-access-key-here"
+common_aws_secret_access_key: "enter-aws-secret-key-here"
+
+# Main grader course configuration repository
 grader_repos: git@github.com:bu-ist/bux-demo-course-grader
 grader_version: develop
 grader_settings_module: settings
 
-collectd_graphite_host: 127.0.0.1
+# Example: Loads SSH identity for private Git repository access
+# GRADER_USE_GIT_IDENTITY: true
+# GRADER_LOCAL_GIT_IDENTITY: "{{ secure_dir }}/files/keys/github-private-key"
+
+# Grader dependencies
+grader_packages: []
+grader_pip_packages: []
+
+# Sync log directories to S3 bucket
+grader_log_environment: vagrant
+grader_s3_log_bucket: your-s3-log-bucket-name
+s3_sync_dirs: ['/edx/var/log/grader', '/edx/var/log/graphite', '/edx/var/log/statsd']
+
+# Vagrant provisoning includes a local Graphite / Statsd install
+# For real deployments use the `monitor.yml` playbook to deploy to separate instance.
+grader_statsd_host: "127.0.0.1"
+grader_statsd_port: 8125
+
+collectd_graphite_host: "127.0.0.1"
 collectd_graphite_port: 2003
 
-grader_statsd_host: 127.0.0.1
-grader_statsd_port: 8125
+# Graphite role configuration
+# See http://www.miniwebtool.com/django-secret-key-generator/
+graphite_secret_key: "your-graphite-secret-key"

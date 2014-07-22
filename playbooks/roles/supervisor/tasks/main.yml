@@ -35,6 +35,7 @@
     dest=/etc/init/supervisor.conf
     owner=root
     group=root
+  notify: restart supervisor
 
 - name: create supervisorctl symlink
   file: >

@@ -2,3 +2,5 @@ secure
 .vagrant
 /grader
 /venv
+sftp-config.json
+.DS_Store

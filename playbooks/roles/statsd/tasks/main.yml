@@ -47,3 +47,11 @@
     group="{{ common_service_user }}"
     mode=0644
   notify: restart supervisor
+
+- name: install log rotation configurations
+  template: >
+    src=logrotate.j2
+    dest="/etc/logrotate.d/statsd"
+    owner=root
+    group=root
+    mode=0644

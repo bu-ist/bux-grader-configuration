@@ -1,0 +1,16 @@
+---
+
+# Example EC2 instance configuration for "edge" environment.
+# Utilized by the `create_grader.yml` / `retire_grader.yml` playbooks.
+ec2:
+    instance_type: "t1.micro"
+    ami: "ami-018c9568"
+    region: ""
+    key_name: ""
+    tags:
+      Name: "buX Grader Edge"
+      role: "grader"
+      environment: "edge"
+      stage: "green"
+    security_groups: []
+    count: 1

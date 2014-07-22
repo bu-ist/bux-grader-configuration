@@ -10,6 +10,7 @@ grader_log_dir: "{{ common_log_dir }}/{{ grader_name }}"
 grader_cfg_dir: "{{ common_cfg_dir }}/{{ grader_name }}"
 
 grader_packages: []
+grader_pip_packages: []
 
 grader_supervisor_prog: "bux-{{ grader_name }}"
 
@@ -17,7 +18,7 @@ GRADER_USE_GIT_IDENTITY: false
 # Example: "{{ secure_dir }}/files/git-identity"
 GRADER_LOCAL_GIT_IDENTITY: !!null
 
-grader_git_identity: "{{ grader_app_dir }}/{{ GRADER_LOCAL_GIT_IDENTITY|basename }}"
+grader_git_identity: "{{ common_service_home }}/{{ GRADER_LOCAL_GIT_IDENTITY|basename }}"
 grader_git_ssh: "/tmp/grader_git_ssh.sh"
 
 grader_statsd_host: 127.0.0.1

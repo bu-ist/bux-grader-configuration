@@ -1,0 +1,16 @@
+---
+
+- name: Provision the "edge" BUx grader environment
+  hosts: tag_role_grader:&tag_environment_edge
+  sudo: True
+
+  # Import secure variables for each environment from unversioned location
+  vars_files:
+    - "{{ secure_dir }}/{{ ec2_tag_environment }}/vars.yml"
+
+  roles:
+    - common
+    - supervisor
+    - collectd
+    - rabbitmq
+    - grader

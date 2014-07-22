@@ -1,0 +1,16 @@
+---
+
+# Example EC2 instance configuration for "production" environment.
+# Utilized by the `create_grader.yml` / `retire_grader.yml` playbooks.
+ec2:
+    instance_type: "c3.large"
+    ami: "ami-018c9568"
+    region: ""
+    key_name: ""
+    tags:
+      Name: "buX Grader Production"
+      role: "grader"
+      environment: "production"
+      stage: "green"
+    security_groups: []
+    count: 1

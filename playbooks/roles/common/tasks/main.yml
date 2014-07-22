@@ -24,23 +24,53 @@
 
 - name: install boto for aws interactions
   pip: >
-    name=boto
+    name="{{ item }}"
+  with_items:
+    - boto
+    - awscli
 
 - name: create service user
   user: >
     name="{{ common_service_user }}"
-    home="{{ common_app_dir }}"
-    createhome=no
-    shell=/bin/false
+    home="{{ common_service_home }}"
+    createhome=yes
+    move_home=yes
   when: common_service_user != 'vagrant'
 
 - name: create common user .ssh directory
   file: >
     state=directory
-    path="{{ common_app_dir }}/.ssh"
+    path="{{ common_service_home }}/.ssh"
     owner="{{ common_service_user }}"
     group="{{ common_service_user }}"
     mode=0700
+
+- name: create common adm user
+  user: >
+    name="{{ common_adm_user }}"
+    home="{{ common_adm_home }}"
+    groups="{{ common_adm_groups | join(",") }}"
+    createhome=yes
+  when: common_adm_user != common_service_user
+
+- name: create common adm user config directories
+  file: >
+    state=directory
+    path="{{ common_adm_home }}/{{ item }}"
+    owner="{{ common_adm_user }}"
+    group="{{ common_adm_user }}"
+    mode=0700
+  with_items:
+    - .ssh
+    - .aws
+
+- name: install awscli config
+  template: >
+    src=aws.config.j2
+    dest="{{ common_adm_home }}/.aws/config"
+    owner="{{ common_adm_user }}"
+    group="{{ common_adm_user }}"
+    mode=0600
 
 - name: create directories
   file: >
@@ -55,3 +85,54 @@
     - "{{ common_cfg_dir }}"
     - "{{ common_data_dir }}"
     - "{{ common_log_dir }}"
+
+
+# Props to https://github.com/ansible/ansible/issues/5241
+
+- name: create swap space
+  command: dd if=/dev/zero of=/swapfile bs={{ common_swap_size.bs }} count={{ common_swap_size.count }}
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+- name: adjust swap permissions
+  command: chmod 600 /swapfile
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+- name: make swap
+  command: mkswap /swapfile
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+- name: add to fstab
+  action: lineinfile dest=/etc/fstab regexp="swapfile" line="/swapfile none swap sw 0 0" state=present
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+- name: turn swap on
+  command: swapon -a
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+- name: Set swapiness
+  shell: echo 0 | sudo tee /proc/sys/vm/swappiness
+  when: ansible_swaptotal_mb < 1 and common_swap_size
+
+# S3 sync cron job
+
+- name: install s3 sync script
+  template: >
+    src=s3_sync.sh.j2
+    dest="{{ common_cfg_dir }}/s3_sync.sh"
+    owner="{{ common_adm_user }}"
+    group="{{ common_adm_user }}"
+    mode=0750
+  when: s3_sync_dirs | length > 0
+  tags: s3_sync
+
+- name: setup s3 sync cron job
+  cron: >
+    name="grader s3 log rotation"
+    hour="6"
+    minute="45"
+    job="{{ common_cfg_dir }}/s3_sync.sh >> {{ common_log_dir }}/cron_s3_sync.log 2>&1"
+    user="{{ common_adm_user }}"
+    state=present
+  when: s3_sync_dirs | length > 0
+  tags: s3_sync
+
