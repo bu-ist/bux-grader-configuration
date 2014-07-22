@@ -82,6 +82,10 @@
   when: GRADER_USE_GIT_IDENTITY
   tags: deploy
 
+- name: check for requirements.txt
+  stat: path={{ grader_code_dir }}/requirements.txt
+  register: requirements_txt
+
 - name: setup grader virtualenv
   pip: >
     requirements="{{ grader_code_dir }}/requirements.txt"
@@ -89,6 +93,7 @@
   sudo_user: "{{ common_service_user }}"
   environment:
     GIT_SSH: "{{ grader_git_ssh }}"
+  when: requirements_txt.stat.exists
   notify: restart grader
   tags: deploy
 
