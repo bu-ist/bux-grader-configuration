@@ -6,6 +6,12 @@ Provisioning is accomplished using [Ansible](http://www.ansible.com/home).
 
 In addition a Vagrantfile is provided for quick setup of local development VMs with [Vagrant](http://www.vagrantup.com/).
 
+## Prerequisites
+
+In order for the grader to start it must be able to succesfully connect to a running XQueue instance. If your course will be hosted on edx.org, contact your program manager to set up your course queue and obtain credentials. See the [course author docs on external graders](http://edx.readthedocs.org/projects/edx-partner-course-staff/en/latest/exercises_tools/external_graders.html) for more details.
+
+For development purposes you might consider standing up your own edX platform using the [edX configuration repository](https://github.com/edx/configuration). See the [Wiki page for installation options](https://github.com/edx/configuration/wiki#installation-options).
+
 ## Getting Started
 
 Clone this repository to your build machine and install the requirements.
