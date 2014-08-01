@@ -9,7 +9,7 @@
 #
 # Consider using `ansible-vault` to encrypt these files.
 #
-secure_dir: "path/to/secure/dir"
+secure_dir: "secure-example"
 
 # Main grader course configuration repository
 grader_repos: https://github.com/bu-ist/bux-demo-course-grader.git
