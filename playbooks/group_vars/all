@@ -12,7 +12,7 @@
 secure_dir: "path/to/secure/dir"
 
 # Main grader course configuration repository
-grader_repos: git@github.com:bu-ist/bux-demo-course-grader
+grader_repos: https://github.com/bu-ist/bux-demo-course-grader.git
 grader_version: master
 grader_settings_module: settings
 
